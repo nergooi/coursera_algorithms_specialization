@@ -1,0 +1,265 @@
+-*- mode: org; -*-
+#+PROPERTY: header-args :session general-purpose_0 :kernel python3 :async yes :display plain
+
+* The algorithm
+
+* The Implement by python
+#+begin_src jupyter-python
+  def KaratsubaMul(x:int, y:int):
+      # assert isinstance(x, int) and isinstance(y, int)
+
+      # The base case
+      if len(str(x)) == 1 or len(str(y)) == 1:
+      #if x < 10 or y < 10:
+          print(f"input base: {(x, y)}")
+          return x*y
+
+      else:
+          sx, sy = str(x), str(y)
+          print(f"input non-base: {(x, y)}")
+          n = min(len(str(x)), len(str(y)))
+          assert isinstance(n, int)
+          assert len(sx) > 1 and len(sy) > 1
+
+          mid = n//2
+          a = int(sx[:len(str(x)) - mid])
+          b = int(sx[len(str(x)) - mid:])
+          c = int(sy[:len(str(y)) - mid])
+          d = int(sy[len(str(y)) - mid:])
+          ac = KaratsubaMul(a, c)
+          assert ac == a*c
+          bd = KaratsubaMul(b, d)
+          assert bd == b*d
+          #print(f"(a+b)(c+d): {(a + b, c + d)}")  
+          cross = KaratsubaMul(a + b, c + d) - ac - bd
+          #cross = (a + b)*(c + d) - ac - bd
+          print(f"(a+b)(c+d) calculated by KaratsubaMul: {KaratsubaMul(a + b, c + d)}")
+          print(f"(a+b)(c+d) calculated by the ordinary mul: {(a + b)*(c + d)}")
+          #print(cross, (a + b)*(c + d) - a*c - b*d)
+          #print((ac, cross, bd), (a + b)*(c + d) - a*c - b*d)
+          assert cross == (a + b)*(c + d) - a*c - b*d
+          return ac*10**(2*mid) + (cross)*10**mid + bd
+#+end_src
+
+#+RESULTS:
+
+#+begin_src jupyter-python
+  # leading zeros in decimal integer show be eliminated.
+  # Actually, python does not permit leading zero showing in the
+  # decimal integer.
+  int("02")
+#+end_src
+
+#+RESULTS:
+: 2
+
+#+begin_src jupyter-python
+  x, y = 3917, 8813
+  print(KaratsubaMul(x, y), x*y)
+#+end_src
+
+#+RESULTS:
+#+begin_example
+  input non-base: (3917, 8813)
+  input non-base: (39, 88)
+  input base: (3, 8)
+  input base: (9, 8)
+  input non-base: (12, 16)
+  input base: (1, 1)
+  input base: (2, 6)
+  input base: (3, 7)
+  input base: (3, 7)
+  (a+b)(c+d) calculated by KaratsubaMul: 21
+  (a+b)(c+d) calculated by the ordinary mul: 21
+  input non-base: (12, 16)
+  input base: (1, 1)
+  input base: (2, 6)
+  input base: (3, 7)
+  input base: (3, 7)
+  (a+b)(c+d) calculated by KaratsubaMul: 21
+  (a+b)(c+d) calculated by the ordinary mul: 21
+  (a+b)(c+d) calculated by KaratsubaMul: 192
+  (a+b)(c+d) calculated by the ordinary mul: 192
+  input non-base: (17, 13)
+  input base: (1, 1)
+  input base: (7, 3)
+  input base: (8, 4)
+  input base: (8, 4)
+  (a+b)(c+d) calculated by KaratsubaMul: 32
+  (a+b)(c+d) calculated by the ordinary mul: 32
+  input non-base: (56, 101)
+  input base: (5, 10)
+  input base: (6, 1)
+  input non-base: (11, 11)
+  input base: (1, 1)
+  input base: (1, 1)
+  input base: (2, 2)
+  input base: (2, 2)
+  (a+b)(c+d) calculated by KaratsubaMul: 4
+  (a+b)(c+d) calculated by the ordinary mul: 4
+  input non-base: (11, 11)
+  input base: (1, 1)
+  input base: (1, 1)
+  input base: (2, 2)
+  input base: (2, 2)
+  (a+b)(c+d) calculated by KaratsubaMul: 4
+  (a+b)(c+d) calculated by the ordinary mul: 4
+  (a+b)(c+d) calculated by KaratsubaMul: 121
+  (a+b)(c+d) calculated by the ordinary mul: 121
+  input non-base: (56, 101)
+  input base: (5, 10)
+  input base: (6, 1)
+  input non-base: (11, 11)
+  input base: (1, 1)
+  input base: (1, 1)
+  input base: (2, 2)
+  input base: (2, 2)
+  (a+b)(c+d) calculated by KaratsubaMul: 4
+  (a+b)(c+d) calculated by the ordinary mul: 4
+  input non-base: (11, 11)
+  input base: (1, 1)
+  input base: (1, 1)
+  input base: (2, 2)
+  input base: (2, 2)
+  (a+b)(c+d) calculated by KaratsubaMul: 4
+  (a+b)(c+d) calculated by the ordinary mul: 4
+  (a+b)(c+d) calculated by KaratsubaMul: 121
+  (a+b)(c+d) calculated by the ordinary mul: 121
+  (a+b)(c+d) calculated by KaratsubaMul: 5656
+  (a+b)(c+d) calculated by the ordinary mul: 5656
+  34520521 34520521
+#+end_example
+
+#+begin_src jupyter-python
+  # Small numbers test
+  assert KaratsubaMul(1,2) == 1*2
+  assert KaratsubaMul(19,9) == 19*9
+  assert KaratsubaMul(9, 19) == 9 * 19
+  assert KaratsubaMul(99999, 99) == 99999 * 99
+  assert KaratsubaMul(101,102) == 101*102
+  assert KaratsubaMul(3977, 8813) == 3977*8813
+#+end_src
+
+#+RESULTS:
+#+begin_example
+  input base: (1, 2)
+  input base: (19, 9)
+  input base: (9, 19)
+  input non-base: (99999, 99)
+  input base: (9999, 9)
+  input base: (9, 9)
+  input non-base: (10008, 18)
+  input base: (1000, 1)
+  input base: (8, 8)
+  input base: (1008, 9)
+  input base: (1008, 9)
+  (a+b)(c+d):(9072, 9072)
+  input non-base: (10008, 18)
+  input base: (1000, 1)
+  input base: (8, 8)
+  input base: (1008, 9)
+  input base: (1008, 9)
+  (a+b)(c+d):(9072, 9072)
+  (a+b)(c+d):(180144, 180144)
+  input non-base: (101, 102)
+  input non-base: (10, 10)
+  input base: (1, 1)
+  input base: (0, 0)
+  input base: (1, 1)
+  input base: (1, 1)
+  (a+b)(c+d):(1, 1)
+  input base: (1, 2)
+  input non-base: (11, 12)
+  input base: (1, 1)
+  input base: (1, 2)
+  input base: (2, 3)
+  input base: (2, 3)
+  (a+b)(c+d):(6, 6)
+  input non-base: (11, 12)
+  input base: (1, 1)
+  input base: (1, 2)
+  input base: (2, 3)
+  input base: (2, 3)
+  (a+b)(c+d):(6, 6)
+  (a+b)(c+d):(132, 132)
+  input non-base: (3977, 8813)
+  input non-base: (39, 88)
+  input base: (3, 8)
+  input base: (9, 8)
+  input non-base: (12, 16)
+  input base: (1, 1)
+  input base: (2, 6)
+  input base: (3, 7)
+  input base: (3, 7)
+  (a+b)(c+d):(21, 21)
+  input non-base: (12, 16)
+  input base: (1, 1)
+  input base: (2, 6)
+  input base: (3, 7)
+  input base: (3, 7)
+  (a+b)(c+d):(21, 21)
+  (a+b)(c+d):(192, 192)
+  input non-base: (77, 13)
+  input base: (7, 1)
+  input base: (7, 3)
+  input base: (14, 4)
+  input base: (14, 4)
+  (a+b)(c+d):(56, 56)
+  input non-base: (116, 101)
+  input non-base: (11, 10)
+  input base: (1, 1)
+  input base: (1, 0)
+  input base: (2, 1)
+  input base: (2, 1)
+  (a+b)(c+d):(2, 2)
+  input base: (6, 1)
+  input non-base: (17, 11)
+  input base: (1, 1)
+  input base: (7, 1)
+  input base: (8, 2)
+  input base: (8, 2)
+  (a+b)(c+d):(16, 16)
+  input non-base: (17, 11)
+  input base: (1, 1)
+  input base: (7, 1)
+  input base: (8, 2)
+  input base: (8, 2)
+  (a+b)(c+d):(16, 16)
+  (a+b)(c+d):(187, 187)
+  input non-base: (116, 101)
+  input non-base: (11, 10)
+  input base: (1, 1)
+  input base: (1, 0)
+  input base: (2, 1)
+  input base: (2, 1)
+  (a+b)(c+d):(2, 2)
+  input base: (6, 1)
+  input non-base: (17, 11)
+  input base: (1, 1)
+  input base: (7, 1)
+  input base: (8, 2)
+  input base: (8, 2)
+  (a+b)(c+d):(16, 16)
+  input non-base: (17, 11)
+  input base: (1, 1)
+  input base: (7, 1)
+  input base: (8, 2)
+  input base: (8, 2)
+  (a+b)(c+d):(16, 16)
+  (a+b)(c+d):(187, 187)
+  (a+b)(c+d):(11716, 11716)
+#+end_example
+
+#+begin_src jupyter-python
+  import random
+  random.seed(0)
+  a, b = 10000, 1000000
+  assert a < b
+  for _ in range(5):
+      x, y = random.randint(a, b), random.randint(a, b)
+      print(x, y)
+      m = x*y
+      assert KaratsubaMul(x, y) == m and KaratsubaMul(y, x) == m
+  print("Test ended.")
+#+end_src
+
